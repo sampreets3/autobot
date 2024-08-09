@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+
+<robot name="autobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="gazebo_references.xacro" />
+    <!-- <xacro:include filename="gazebo_diff_drive.xacro" /> -->
+    <xacro:include filename="ros2_control.xacro"/>
+    <xacro:include filename="sensors.xacro" />
+
+    <!-- PROPERTY DEFINITIONS -->
+    <xacro:property name="chassis_length"   value="0.500" />
+    <xacro:property name="chassis_width"    value="0.300" />
+    <xacro:property name="chassis_height"   value="0.150" />
+    <xacro:property name="wheel_radius"     value="0.050" />
+    <xacro:property name="wheel_thickness"  value="0.020" />
+    <xacro:property name="caster_radius"    value="0.050" />
+    <xacro:property name="ground_clearance" value="0.050" />
+
+    <!-- * * * Link Definitions * * * -->
+    <link name="base_link"/>
+
+    <link name="chassis_lower">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="0.5 0.3 0.1" /> 
+            </geometry>
+            <material name="blue">
+                <color rgba="0.1 0.1 1.0 1.0" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} 0.1" /> 
+            </geometry>
+            <material name="blue"/>
+        </collision>
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="20.0"/>
+            <inertia ixx="0.167" ixy="0.0" ixz="0.0" iyy="0.433" iyz="0.0" izz="0.567" />
+        </inertial>
+    </link>
+
+    <link name="left_drive_wheel">
+        <visual>
+          <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+          <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
+          </geometry>
+          <material name="black">
+            <color rgba="0.0 0.0 0.0 1.0"/>
+          </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <sphere radius="${wheel_radius}" />
+            </geometry>
+            <material name="black">
+                <color rgba="0.0 0.0 0.0 1.0"/>
+            </material>
+        </collision>
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="1.0" />
+            <inertia ixx="3.416e-4" ixy="0.0" ixz="0.0" iyy="3.416e-4" iyz="0.0" izz="2.083e-4" />
+        </inertial>
+    </link>
+
+    <link name="right_drive_wheel">
+        <visual>
+          <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+          <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
+          </geometry>
+          <material name="black">
+            <color rgba="0.0 0.0 0.0 1.0"/>
+          </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <sphere radius="${wheel_radius}" />
+            </geometry>
+            <material name="black">
+                <color rgba="0.0 0.0 0.0 1.0"/>
+            </material>
+        </collision>
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="1.0" />
+            <inertia ixx="3.416e-4" ixy="0.0" ixz="0.0" iyy="3.416e-4" iyz="0.0" izz="2.083e-4" />
+        </inertial>
+    </link>
+
+    <xacro:macro name="caster_wheel" params="name">
+        <link name="${name}">
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <sphere radius="${caster_radius}" />
+                </geometry>
+                <material name="gray">
+                    <color rgba="0.25 0.25 0.25 1.0" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <sphere radius="${caster_radius}" />
+                </geometry>
+                <material name="gray">
+                    <color rgba="0.25 0.25 0.25 1.0" />
+                </material>
+            </collision>
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <mass value="1.0" />
+                <inertia ixx="0.00025" ixy="0.0" ixz="0.0" iyy="0.00025" iyz="0.0" izz="0.00025" />
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:caster_wheel name="caster_front_left" />
+    <xacro:caster_wheel name="caster_front_right" />
+    <xacro:caster_wheel name="caster_rear_left" />
+    <xacro:caster_wheel name="caster_rear_right" />
+
+    <xacro:laser_scanner name="laser_front_left" topic="scan_front_left" />
+    <xacro:laser_scanner name="laser_rear_right" topic="scan_rear_right" />
+
+    <!-- * * * Joint Definitions * * * -->
+    <joint name="base_footprint" type="fixed">
+        <parent link="base_link" />
+        <child	link="chassis_lower" />
+        <origin xyz="0.0 0.0 ${ground_clearance}" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="chassis_lower_to_left_drive_wheel" type="continuous">
+        <parent link="chassis_lower"/>
+        <child link="left_drive_wheel"/>
+        <origin xyz="0.0 0.15 ${-ground_clearance}" rpy="1.57 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0" />
+    </joint>
+    
+    <joint name="chassis_lower_to_right_drive_wheel" type="continuous">
+        <parent link="chassis_lower"/>
+        <child link="right_drive_wheel"/>
+        <origin xyz="0.0 -0.15 ${-ground_clearance}" rpy="1.57 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0" />
+    </joint>
+
+    <joint name="chassis_lower_to_caster_front_left" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="caster_front_left"/>
+        <origin xyz="0.175 -0.125 ${-ground_clearance}" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="chassis_lower_to_caster_front_right" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="caster_front_right"/>
+        <origin xyz="0.175 0.125 ${-ground_clearance}" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="chassis_lower_to_caster_rear_left" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="caster_rear_left"/>
+        <origin xyz="-0.175 -0.125 ${-ground_clearance}" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="chassis_lower_to_caster_rear_right" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="caster_rear_right"/>
+        <origin xyz="-0.175 0.125 ${-ground_clearance}" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="chassis_lower_to_laser_front_left" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="laser_front_left"/>
+        <origin xyz="0.175 0.11 ${chassis_height/2 - 0.015}" rpy="0.0 0.0 0.7" />
+    </joint>
+
+    <joint name="chassis_lower_to_laser_rear_right" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="laser_rear_right"/>
+        <origin xyz="-0.175 -0.11 ${chassis_height/2 - 0.015}" rpy="0.0 0.0 -2.525" />
+    </joint>
+</robot>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <gazebo reference="chassis_lower">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="chassis_mid">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="chassis_upper">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="right_drive_wheel">
+        <material>Gazebo/Black</material>
+        <material>Gazebo/Black</material>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <maxContacts>1</maxContacts>
+    </gazebo>
+
+    <gazebo reference="left_drive_wheel">
+        <material>Gazebo/Black</material>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        <maxContacts>1</maxContacts>
+    </gazebo>
+
+    <gazebo reference="caster_front_left">
+        <material>Gazebo/Gray</material>
+        <mu1>0.010</mu1>
+        <mu2>0.025</mu2>
+    </gazebo>
+
+    <gazebo reference="caster_front_right">
+        <material>Gazebo/Gray</material>
+        <mu1>0.010</mu1>
+        <mu2>0.025</mu2>
+    </gazebo>
+
+    <gazebo reference="caster_rear_left">
+        <material>Gazebo/Gray</material>
+        <mu1>0.010</mu1>
+        <mu2>0.025</mu2>
+    </gazebo>
+
+    <gazebo reference="caster_rear_right">
+        <material>Gazebo/Gray</material>
+        <mu1>0.010</mu1>
+        <mu2>0.025</mu2>
+    </gazebo>
+
+</robot>
