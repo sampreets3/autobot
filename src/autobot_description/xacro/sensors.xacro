@@ -31,7 +31,7 @@
             <gravity>true</gravity>
             <sensor name="${name}" type="gpu_ray">
                 <always_on>true</always_on>
-                <visualize>true</visualize>
+                <visualize>false</visualize>
                 <update_rate>20</update_rate>
                 <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <ray>

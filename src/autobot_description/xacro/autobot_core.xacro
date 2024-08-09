@@ -18,6 +18,7 @@
 
     <!-- * * * Link Definitions * * * -->
     <link name="base_link"/>
+    <link name="laser_merged" />
 
     <link name="chassis_lower">
         <visual>
@@ -136,6 +137,12 @@
         <parent link="base_link" />
         <child	link="chassis_lower" />
         <origin xyz="0.0 0.0 ${ground_clearance}" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="chassis_lower_to_laser_merged" type="fixed">
+        <parent link="chassis_lower"/>
+        <child link="laser_merged"/>
+        <origin xyz="0.0 0.0 ${chassis_height/2 - 0.015}" rpy="0.0 0.0 0.0" />
     </joint>
 
     <joint name="chassis_lower_to_left_drive_wheel" type="continuous">
