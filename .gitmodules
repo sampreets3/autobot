@@ -1,0 +1,3 @@
+[submodule "src/autobot_scan_merger"]
+	path = src/autobot_scan_merger
+	url = https://github.com/giuschio/scan_merger_2
