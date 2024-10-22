@@ -26,7 +26,24 @@ def generate_launch_description():
         get_package_share_directory("autobot_bringup"), "config", "autobot_params.yaml"
     )
 
+    bridge_params = os.path.join(
+        get_package_share_directory("autobot_gazebo"),
+        "config",
+        "autobot_gz_bridge.yaml",
+    )
+
     robot_description_config = Command(["xacro ", xacro_file])
+
+    start_gazebo_ros_bridge_cmd = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "--ros-args",
+            "-p",
+            f"config_file:={bridge_params}",
+        ],
+        output="screen",
+    )
 
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
@@ -65,5 +82,6 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_node)
     ld.add_action(spawn_robot)
+    ld.add_action(start_gazebo_ros_bridge_cmd)
 
     return ld
