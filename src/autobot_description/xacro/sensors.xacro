@@ -29,12 +29,15 @@
         <gazebo reference="${name}">
             <material>Gazebo/Black</material>
             <gravity>true</gravity>
-            <sensor name="${name}" type="gpu_ray">
+
+            <sensor name="${name}" type="gpu_lidar">
                 <always_on>true</always_on>
-                <visualize>false</visualize>
-                <update_rate>20</update_rate>
+                <visualize>true</visualize>
                 <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-                <ray>
+                <update_rate>20</update_rate>
+                <topic>${topic}</topic>
+                <gz_frame_id>${name}</gz_frame_id>
+                <lidar>
                     <scan>
                         <horizontal>
                             <samples>128</samples>
@@ -52,22 +55,7 @@
                         <mean>0.0</mean>
                         <stddev>0.005</stddev>
                     </noise>
-                </ray>
-                <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
-                    <ros>
-                        <remapping>~/out:=${topic}</remapping>
-                        <qos>
-                            <topic name="${topic}">
-                                <publisher>
-                                    <reliability>reliable</reliability>
-                                    <durability>volatile</durability>
-                                </publisher>
-                            </topic>
-                        </qos>
-                    </ros>
-                    <output_type>sensor_msgs/LaserScan</output_type>
-                    <frame_name>${name}</frame_name>
-                </plugin>
+                </lidar>
             </sensor>
         </gazebo>
     </xacro:macro>
