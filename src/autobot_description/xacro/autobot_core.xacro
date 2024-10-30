@@ -3,8 +3,8 @@
 <robot name="autobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="gazebo_references.xacro" />
-    <!-- <xacro:include filename="gazebo_diff_drive.xacro" /> -->
-    <xacro:include filename="ros2_control.xacro"/>
+    <xacro:include filename="gazebo_diff_drive.xacro" />
+    <!-- <xacro:include filename="ros2_control.xacro"/> -->
     <xacro:include filename="sensors.xacro" />
 
     <!-- PROPERTY DEFINITIONS -->
