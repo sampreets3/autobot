@@ -31,25 +31,6 @@ def generate_launch_description():
         parameters=[{"robot_description": robot_description_config}],
     )
 
-    gazebo_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [
-                os.path.join(
-                    get_package_share_directory("gazebo_ros"),
-                    "launch",
-                    "gazebo.launch.py",
-                )
-            ]
-        ),
-    )
-
-    spawn_entity_node = Node(
-        package="gazebo_ros",
-        executable="spawn_entity.py",
-        arguments=["-topic", "robot_description", "-entity", "autobot"],
-        output="screen",
-    )
-
     # ROS2_CONTROL bits
     diff_drive_spawner = Node(
         package="controller_manager",
@@ -74,8 +55,6 @@ def generate_launch_description():
     return LaunchDescription(
         [
             robot_state_publisher_node,
-            gazebo_node,
-            spawn_entity_node,
             diff_drive_spawner,
             joint_broadcast_spawner,
             laser_scan_merger_node,
